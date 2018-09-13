@@ -231,6 +231,7 @@ bool MemList::freeMemBlock(MemBlock * block_to_free)
     }
 
     //Adding to Free
+    //adding block_to_free as the one to add becuase it should have returned false above if block_to_free didn't exist
     //case 1: adding to empty list
     if (free_head == NULL) {
         free_head = block_to_free;
@@ -276,7 +277,18 @@ MemBlock * MemList::maxFree()
     */
 
     //adding below:
-    
+    MemBlock *current;
+    current = free_head;
+    MemBlock *biggest;
+    biggest = current;
+
+    while (current->getNext() != NULL) {
+        if (current->getSize() > biggest->getSize()) {
+            biggest = current;
+        }
+        current = current->getNext();
+    }
+    return biggest;
 }
 
 // Return a pointer to the MemBlcok with the smallest size from the Free List
