@@ -81,15 +81,12 @@ MemList::MemList(unsigned int s_addr, unsigned int block_size)
     */
 
     //adding below:
-    std::cout << "in constructor:" << std::endl;
-
     MemBlock *current;
     current = new MemBlock;
     current->setAddr(s_addr);
     current->setSize(block_size);
     current->setNext(NULL);
     free_head = current;
-    std::cout << ">>>>>>" << free_head->getAddr() << " " << free_head->getSize() << std::endl;
 
     reserved_head = NULL;
 }
@@ -105,7 +102,6 @@ MemList::MemList(unsigned int s_addr, unsigned int block_size)
 //
 MemBlock * MemList::reserveMemBlock(unsigned int block_size)
 {
-    std::cout << ">>>>>>>reserveMemBlock" << std::endl;
     /*
     // To be implemented
     return NULL;
