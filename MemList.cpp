@@ -5,7 +5,7 @@
 //
 // // Class implementation of MemList for New Beginnings Final Proficiency Exam
 // 2018
-//!!!!!!!!!!!!!!!!63: level 1
+//Line 190: level 2
 
 #include "MemList.hpp"
 #include "MemBlock.hpp"
@@ -200,8 +200,65 @@ unsigned int MemList::freeSize()
 //
 bool MemList::freeMemBlock(MemBlock * block_to_free)
 {
+    /*
     // To be implemented
     return false;
+    */
+
+    //adding below:
+    //Removing from Reserved List: 
+    //  if node to remove is head
+    if (reserved_head == block_to_free) {
+        reserved_head = block_to_free->getNext();
+        block_to_free->setNext(NULL);
+    }
+    //  if node to remove is in middle/end
+    else {
+        MemBlock *temp;
+        temp = reserved_head;
+        while ((temp->getNext() != NULL) && (temp->getNext() != block_to_free)) {
+            temp = temp->getNext();
+        }
+        //will return false if block to be freed does not exist
+        if (temp->getNext() != block_to_free) {
+            return false;
+        }
+        else {
+            temp->setNext(block_to_free->getNext());
+            block_to_free->setNext(NULL);
+        }
+    }
+
+    //Adding to Free
+    //case 1: adding to empty list
+    if (free_head == NULL) {
+        free_head = block_to_add;
+        return true;
+    }
+    //case 2: adding to head
+    else if (free_head->getAddr() > block_to_add->getAddr()) {
+        block_to_free->setNext(free_head);
+        free_head = block_to_free;
+        return true;
+    }
+    //case 3: adding to middle
+    else {
+        MemBlock *current;
+        current = free_head;
+        //loop finds after which node new block should be added
+        while ((current->getAddr() < block_to_free->getAddr()) && (current->getNext() != NULL)) {
+            current = current->getNext();
+        }
+        //this checks if we are trying to add a bad block (a block that fits into another block, at least partly)
+        if (current->getAddr() < block_to_free->getAddr() && (current->getSize() > block_to_free->getAddr())) {
+            return false;
+        }
+        else {
+            block_to_add->setNext(current->getNext());
+            current->setNext(block_to_free);
+        }
+        return true;
+    }
 }
 
 
@@ -212,8 +269,13 @@ bool MemList::freeMemBlock(MemBlock * block_to_free)
 //
 MemBlock * MemList::maxFree() 
 {
+    /*
     // To be implemented
     return NULL;
+    */
+
+    //adding below:
+    
 }
 
 // Return a pointer to the MemBlcok with the smallest size from the Free List
