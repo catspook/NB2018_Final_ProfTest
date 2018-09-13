@@ -211,6 +211,7 @@ bool MemList::freeMemBlock(MemBlock * block_to_free)
     if (reserved_head == block_to_free) {
         reserved_head = block_to_free->getNext();
         block_to_free->setNext(NULL);
+
     }
     //  if node to remove is in middle/end
     else {
@@ -232,11 +233,11 @@ bool MemList::freeMemBlock(MemBlock * block_to_free)
     //Adding to Free
     //case 1: adding to empty list
     if (free_head == NULL) {
-        free_head = block_to_add;
+        free_head = block_to_free;
         return true;
     }
     //case 2: adding to head
-    else if (free_head->getAddr() > block_to_add->getAddr()) {
+    else if (free_head->getAddr() > block_to_free->getAddr()) {
         block_to_free->setNext(free_head);
         free_head = block_to_free;
         return true;
@@ -254,7 +255,7 @@ bool MemList::freeMemBlock(MemBlock * block_to_free)
             return false;
         }
         else {
-            block_to_add->setNext(current->getNext());
+            block_to_free->setNext(current->getNext());
             current->setNext(block_to_free);
         }
         return true;
