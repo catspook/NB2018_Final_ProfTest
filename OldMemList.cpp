@@ -5,7 +5,6 @@
 //
 // // Class implementation of MemList for New Beginnings Final Proficiency Exam
 // 2018
-//!!!!!!!!!!!!!!!!63: level 1
 
 #include "MemList.hpp"
 #include "MemBlock.hpp"
@@ -74,23 +73,8 @@ void MemList::displayReserved()
 //
 MemList::MemList(unsigned int s_addr, unsigned int block_size)
 {
-    /*
     // To be implemented(replace the two lines below)
     free_head = NULL;
-    reserved_head = NULL;
-    */
-
-    //adding below:
-    std::cout << "in constructor:" << std::endl;
-
-    MemBlock *current;
-    current = new MemBlock;
-    current->setAddr(s_addr);
-    current->setSize(block_size);
-    current->setNext(NULL);
-    free_head = current;
-    std::cout << ">>>>>>" << free_head->getAddr() << " " << free_head->getSize() << std::endl;
-
     reserved_head = NULL;
 }
 
@@ -105,42 +89,8 @@ MemList::MemList(unsigned int s_addr, unsigned int block_size)
 //
 MemBlock * MemList::reserveMemBlock(unsigned int block_size)
 {
-    std::cout << ">>>>>>>reserveMemBlock" << std::endl;
-    /*
     // To be implemented
     return NULL;
-    */
-
-    //adding below:
-    //we want to cycle through free to find a node where size is big enough to take out block size
-    //then add that block to reserved
-    //then take it away from free
-    
-    MemBlock *current;
-    current = new MemBlock;
-    current = free_head;
-    while ((current->getSize() < block_size) && (current->getNext() != NULL)) {
-        current = current->getNext();
-    }
-    if (current->getSize() < block_size) {
-        return NULL;
-    }
-    else {
-        MemBlock *temp;
-        temp = new MemBlock;
-
-        temp->setAddr(current->getAddr());
-        temp->setSize(block_size);
-        temp->setNext(reserved_head);
-        reserved_head = temp;
-
-        unsigned int new_addr = current->getAddr() + block_size;
-        unsigned int new_size = current->getSize() - block_size;
-        current->setAddr(new_addr);
-        current->setSize(new_size);
-
-        return reserved_head;
-    }
 }
 
 
@@ -150,22 +100,8 @@ MemBlock * MemList::reserveMemBlock(unsigned int block_size)
 //
 unsigned int MemList::reservedSize()
 {
-    /*
     // To be implemented
     return 0;
-    */
-
-    //adding below:
-    MemBlock *temp;
-    temp = new MemBlock;
-    temp = reserved_head;
-    unsigned int total_size = 0;
-
-    while (temp != NULL) {
-        total_size += temp->getSize();
-        temp = temp->getNext();
-    }
-    return total_size;
 }
 
 // Return the total size of all blocks in the Free List
@@ -173,22 +109,8 @@ unsigned int MemList::reservedSize()
 // Level 1
 unsigned int MemList::freeSize()
 {
-    /*
     // To be implemented
     return 0;
-    */
-
-    //adding below:
-    MemBlock *current;
-    current = new MemBlock;
-    current = free_head;
-    unsigned int total_size = 0;
-
-    while (current != NULL) {
-        total_size += current->getSize();
-        current = current->getNext();
-    }
-    return total_size;
 }
 
 /////////////////////////////////////////////////////////////////////////////////
