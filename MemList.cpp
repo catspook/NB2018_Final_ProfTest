@@ -280,7 +280,7 @@ MemBlock * MemList::maxFree()
     MemBlock *current;
     current = free_head;
     MemBlock *biggest;
-    biggest = current;
+    biggest = smallest;
 
     while (current->getNext() != NULL) {
         if (current->getSize() > biggest->getSize()) {
@@ -297,8 +297,24 @@ MemBlock * MemList::maxFree()
 //
 MemBlock * MemList::minFree()
 {
+    /*
     // To be implemented
     return NULL;
+    */
+
+    //adding below:
+    MemBlock *current;
+    current = free_head;
+    MemBlock *smallest;
+    smallest = free_head;
+
+    while (current->getNext() != NULL) {
+        if (current->getNext() < smallest->getSize()) {
+            smallest = current;
+        }
+        current = current->getNext();
+    }
+    return smallest;
 }
 
 // Return the number of MemBlocks in the Free List
