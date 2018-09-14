@@ -234,21 +234,28 @@ bool MemList::freeMemBlock(MemBlock * block_to_free)
     //adding block_to_free as the one to add becuase it should have returned false above if block_to_free didn't exist
     //case 1: adding to empty list
     if (free_head == NULL) {
+//        std::cout << "adding to empty list" << std::endl;
         free_head = block_to_free;
         return true;
     }
     //case 2: adding to head
     else if (free_head->getAddr() > block_to_free->getAddr()) {
+//        std::cout << "adding to head" << std::endl;
         block_to_free->setNext(free_head);
         free_head = block_to_free;
+//        std::cout << "New head: " << free_head->getAddr() << std::endl;
         return true;
     }
     //case 3: adding to middle
     else {
+//        std::cout << "adding to middle" << std::endl;
         MemBlock *current;
         current = free_head;
+//        std::cout << "current head should be equal to last one" << current->getAddr() << std::endl;
+        
         //loop finds after which node new block should be added
-        while ((current->getAddr() < block_to_free->getAddr()) && (current->getNext() != NULL)) {
+        while ((current->getNext()->getAddr() < block_to_free->getAddr()) && (current->getNext() != NULL)) {
+//            std::cout << "in loop" << std::endl;
             current = current->getNext();
         }
         //this checks if we are trying to add a bad block (a block that fits into another block, at least partly)
@@ -331,7 +338,7 @@ unsigned int MemList::freeBlockCount()
     //adding below:
     MemBlock *current;
     current = free_head;
-    int counter = 0;
+    unsigned int counter = 1;
 
     while (current->getNext() != NULL) {
         counter++;
@@ -350,8 +357,63 @@ unsigned int MemList::freeBlockCount()
 //
 unsigned int MemList::defragFree()
 {
+    /*
     // To be implemented
     return 0;
+    */
+
+    //adding below:
+//    std::cout << "in defragFree()" << std::endl;
+//    std::cout << "free_head is a thing? " << free_head->getAddr() << std::endl;
+    MemBlock *current;
+    current = free_head;
+    unsigned int removed = 0;
+
+    while (current->getNext() != NULL) {
+//        std::cout << ">>>current " << current->getAddr() << " " << current->getSize() << std::endl;
+        unsigned int total = current->getAddr() + current->getSize();
+//        std::cout << ">>>total " << total << std::endl;
+//        std::cout << ">>>next " << current->getNext()->getAddr() << " " << current->getNext()->getSize() << std::endl;
+        if (total == current->getNext()->getAddr()) {
+            unsigned int total2 = current->getNext()->getSize() + current->getSize();
+//            std::cout << "total2 " << total2 << std::endl;
+            current->setSize(total2);
+//            std::cout << "new current " << current->getAddr() << " " << current->getSize() << std::endl;
+            
+            MemBlock *temp;
+            temp = current->getNext();
+            if (temp->getNext() == NULL) {
+//                std::cout << "NULL NULL" << std::endl;
+                current->setNext(NULL);
+//                if (current->getNext() == NULL) {
+//                    std::cout << "NULL! " << std::endl;
+//                }
+            }
+            else {
+//                std::cout << "If this prints the above code did not work." << std::endl;
+                current->setNext(temp->getNext());
+            }
+            temp->setNext(NULL);
+//            if (temp->getNext() == NULL) {
+//                std::cout << "NULL!!" << std::endl;
+//            }
+
+           delete temp;
+            removed++;
+//            std::cout << "removed " << removed << std::endl;
+        }
+//        std::cout << "current " << current->getAddr() << " " << current->getSize() << std::endl;
+        if (current->getNext() == NULL) {
+//            std::cout << "should be null" << std::endl;
+            return removed;
+        }
+        else {
+//            std::cout << "next " << current->getNext()->getAddr() << std::endl;
+            current = current->getNext();
+        }
+    }
+//    std::cout << "Out of defrag?" << std::endl;
+    return removed;
 }
 
 // Return the start address of the smallest block that fits the size requested
@@ -361,12 +423,19 @@ unsigned int MemList::defragFree()
 //
 // Level 3
 //
-MemBlock * MemList::reserveMinMemBlock(unsigned int)
+MemBlock * MemList::reserveMinMemBlock(unsigned int to_fit)
 {
+    /*
     // To be implemented
     return NULL;
+    */
+
+    //added below
+    MemBlock *current;
+    current = free_head;
+
+    while (current->getNext() != NULL && current->getSize() < to_fit) {
+        current = current->getNext();
+    }
+    return current;
 }
-
-
-
-
